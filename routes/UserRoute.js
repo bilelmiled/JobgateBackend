@@ -16,5 +16,8 @@ router.get('/details',auth ,UserController.getUserDetails);
 router.post('/forgotPassword', UserController.forgotPassword); // Endpoint for forgot password
 router.post('/resetPassword', UserController.resetPassword); // Endpoint for reset password
 router.put('/updateProfile', auth,upload.single("image"), UserController.updateUserProfile); // Endpoint to update user profile
+router.put('/addSkillToUser', auth, UserController.addSkillToUser); // Endpoint to add skill to user
+
+
 
 module.exports = router;

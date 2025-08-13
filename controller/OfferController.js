@@ -1,4 +1,5 @@
-const Offer = require('../models/OfferModel'); // Assure-toi que ton modèle est bien dans ce chemin
+const Offer = require('../models/OfferModel'); 
+const User = require('../models/UserModel'); 
 
 // Créer une offre
 const createOffer = async (req, res) => {
@@ -21,10 +22,14 @@ const createOffer = async (req, res) => {
         description,
         company: companyId,
         category,
+
         contractType,
         skillsRequired
         });
     await newOffer.save();
+    await User.findByIdAndUpdate(companyId,
+      {$push :{offers: newOffer._id}}
+    );
     res.status(201).json({ message: 'Offer created successfully', offer: newOffer });
   } catch (err) {
     res.status(500).json({ message: 'Offer creation error', error: err.message });
@@ -141,6 +146,42 @@ const modifyOffer = async (req, res) => {
   }
 }
 
+const addOfferToFavorites = async (req, res) => {
+  try {
+    const offerId = req.params.id;
+    const userId = req.user.id;
+    const offer = await Offer.findById(offerId);
+    if (!offer) {
+      return res.status(404).json({ message: 'Offer not found' });
+    }
+    // Ajouter l'offre aux favoris de l'utilisateur
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { favoriteOffers: offerId }
+    });
+    res.status(200).json({ message: 'Offer added to favorites successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding offer to favorites', error: err.message });
+  }
+}
+
+const removeOfferFromFavorites = async (req, res) => {
+  try {
+    const offerId = req.params.id;
+    const userId = req.user.id;
+    const offer = await Offer.findById(offerId);
+    if (!offer) {
+      return res.status(404).json({ message: 'Offer not found' });
+    } 
+    // Retirer l'offre des favoris de l'utilisateur
+    await User.findByIdAndUpdate(userId, {
+      $pull: { favoriteOffers: offerId }
+    });
+    res.status(200).json({ message: 'Offer removed from favorites successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error removing offer from favorites', error: err.message });
+  }
+}
+
 module.exports = {
   createOffer,
   validateOffer,
@@ -148,5 +189,7 @@ module.exports = {
   getOffersByCompany,
   getOfferById,
   getAllOffers,
-  modifyOffer
+  modifyOffer,
+  addOfferToFavorites,
+  removeOfferFromFavorites
 }

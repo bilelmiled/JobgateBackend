@@ -13,6 +13,8 @@ router.get('/offersByCompany/:companyId', OfferController.getOffersByCompany);
 router.get('/offer/:id', auth, OfferController.getOfferById);
 router.get('/allOffers', OfferController.getAllOffers);
 router.put('/modifyOffer/:id', auth, authorize('company'), OfferController.modifyOffer);
+router.post('/addOfferToFavorites/:offerId', auth, OfferController.addOfferToFavorites);
+router.delete('/removeOfferFromFavorites/:offerId', auth, OfferController.removeOfferFromFavorites);
 
 
 module.exports = router;

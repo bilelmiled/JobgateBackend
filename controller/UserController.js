@@ -155,7 +155,7 @@ const loginUser = async (req, res) => {
 const getUsersByRole = async (req, res) => {
   try {
     const { role } = req.params;
-    const users = await User.find({ role });
+    const users = await User.find({ role }).populate('offers').populate('applications');
 
     if (users.length === 0) {
       return res.status(404).json({ message: `No users found with role ${role}` });
@@ -313,6 +313,26 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const addSkillToUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { skill } = req.body;
+    // Vérifier si le skill est déjà présent
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    if (user.skills.includes(skill)) {
+      return res.status(400).json({ message: 'Skill already exists' });
+    }
+    // Ajouter le skill
+    user.skills.push(skill);
+    await user.save();
+    res.status(200).json({ message: 'Skill added successfully', skills: user.skills });
+  } catch (err) {
+    res.status(500).json({ message: 'Error adding skill', error: err.message });
+  }
+};
 
 module.exports = {
   createUserPublic,
@@ -323,5 +343,6 @@ module.exports = {
   getUserDetails,
   forgotPassword,
   resetPassword,
-  updateUserProfile
+  updateUserProfile,
+  addSkillToUser
 };
