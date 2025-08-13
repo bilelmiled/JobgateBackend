@@ -1,0 +1,31 @@
+{
+  "fullname": "Amir Khabir",
+  "email": "amir.candidate@example.com",
+  "password": "password123",
+  "phone": "12345678",
+  "role": "candidate",
+  "skills": ["JavaScript", "Node.js", "React"],
+  "level": 2
+}
+
+
+{
+  "fullname": "Admin User",
+  "email": "admin@example.com",
+  "password": "adminPass789",
+  "phone": "11223344",
+  "role": "admin",
+  "permissions": ["manage_users", "manage_offers"]
+}
+
+
+{
+  "fullname": "Société XYZ",
+  "email": "contact@xyz.com",
+  "password": "securePass456",
+  "phone": "98765432",
+  "role": "company",
+  "companyName": "XYZ Technologies",
+  "speciality": "Informatique",
+  "description": "Entreprise spécialisée en développement logiciel"
+}

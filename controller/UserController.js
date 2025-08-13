@@ -246,6 +246,7 @@ const forgotPassword = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 const resetPassword = async (req, res) => {
   const { email, code, newPassword } = req.body;
 

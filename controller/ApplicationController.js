@@ -43,6 +43,10 @@ await User.findByIdAndUpdate(userId, {
 const getApplicationsByOffer = async (req, res) => {
   try {
     const offerId = req.params.offerId;
+    // Check if the user is authorized to view applications for this offer
+    if (req.user.role !== 'company' && req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only companies or admins can view applications for this offer' });
+    }
     // Check if the offer exists
     const offer = await Offer.findById(offerId);
     if (!offer) {
@@ -163,6 +167,20 @@ const rejectApplication = async (req, res) => {
     res.status(500).json({ message: 'Error rejecting application', error: err.message });
   }
 }
+const getApplicationsByCandidate = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    if (req.user.role !== 'candidate') {
+      return res.status(403).json({ message: 'Only candidates can retrieve their applications' });
+    }
+
+    const applications = await Application.find({ candidate: userId })
+      .populate('offer','_id'); 
+    res.status(200).json(applications);
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving applications', error: err.message });
+  }
+}
 
 module.exports = {
   applyToOffer,
@@ -170,5 +188,6 @@ module.exports = {
   getApplicationByOfferByCandidate,
   deleteApplicationByCompany,
   acceptApplication,
-  rejectApplication
+  rejectApplication,
+  getApplicationsByCandidate
 }
