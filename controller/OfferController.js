@@ -96,7 +96,7 @@ const getOfferById = async (req, res) => {
   try {
     const offerId = req.params.id;
 
-    const offer = await Offer.findById(offerId).populate('company', 'companyName');
+    const offer = await Offer.findById(offerId).populate('company', 'companyName').populate('comments','content');
     if (!offer) {
       return res.status(404).json({ message: 'Offer not found' });
     }
@@ -108,7 +108,7 @@ const getOfferById = async (req, res) => {
 
 const getAllOffers = async (req, res) => {
   try {
-    const offers = await Offer.find().populate('company', 'companyName');
+    const offers = await Offer.find().populate('company', 'companyName').populate('comments','content');
     res.status(200).json({ message: 'Offers retrieved successfully', offers });
   } catch (err) {
     res.status(500).json({ message: 'Error retrieving offers', error: err.message });

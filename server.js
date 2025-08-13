@@ -38,3 +38,5 @@ const offerRoutes = require('./routes/OfferRoute');
 app.use('/offers', offerRoutes);
 const applicationRoutes = require('./routes/ApplicationRoute');
 app.use('/applications', applicationRoutes);
+const commentRoutes = require('./routes/CommentRoute');
+app.use('/comments', commentRoutes);
